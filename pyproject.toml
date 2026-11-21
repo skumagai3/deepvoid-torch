@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deepvoid-torch"
+version = "0.0.1"
+description = "PyTorch implementation of DeepVoid, 3D U-Nets for cosmic web segmentation"
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Sam Kumagai" }]
+dependencies = [
+    "deepvoid @ git+https://github.com/skumagai3/deepvoid@5f9fe5f9df3c12b484ece7876202239c70eea415",
+    "torch>=2.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
