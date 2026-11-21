@@ -12,7 +12,7 @@ requires-python = ">=3.10"
 authors = [{ name = "Sam Kumagai" }]
 dependencies = [
     "deepvoid @ git+https://github.com/skumagai3/deepvoid@5f9fe5f9df3c12b484ece7876202239c70eea415",
-    "torch>=2.1",
+    "torch>=2.11",
 ]
 
 [project.optional-dependencies]

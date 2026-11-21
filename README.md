@@ -12,7 +12,45 @@ way.
 
 ## Status
 
-Work in progress. So far: the U-Net convolution block.
+**This is very much a work in progress.** It cannot train or run a model
+yet. So far it has only the U-Net convolution block. Use
+[deepvoid](https://github.com/skumagai3/deepvoid) for real work.
+
+## What comes from `deepvoid`
+
+`deepvoid` is installed as a dependency, pinned to one commit (see
+`pyproject.toml`), so a change there cannot change results here until the
+pin is moved. It brings NumPy (>=1.24), SciPy (>=1.10) and PyYAML (>=6),
+but not TensorFlow, which is an optional extra of `deepvoid`.
+
+The plan is to use these modules of `deepvoid` as they are. They need only
+NumPy and SciPy (not all are imported here yet):
+
+| module | contents |
+|---|---|
+| `catalog`, `data`, `io`, `volume`, `project` | the data catalog, downloading the published grids, reading and writing grids, project folders |
+| `sources` (`tng`, `bolshoi`, `smdpl`, `quijote`, `indra`) | readers for each simulation |
+| `grid`, `resample` | cloud-in-cell gridding of tracers, changing grid resolution |
+| `labels` (`tweb`) | T-web labels |
+| `observe` (`rsd`, `tracers`, `survey`) | redshift space, tracer selection, survey masks and selection |
+| `inputs`, `preprocess` | building and normalizing model inputs |
+| `config` | reading run configs and their defaults |
+| `split`, `curriculum` | train/validation/test slabs, sampling across inputs |
+| `predict` | predicting a whole volume in overlapping crops |
+| `evaluate`, `calibrate` | scores (MCC, F1, confusion matrices) and calibration of the class scores |
+| `stopping` | early stopping |
+| `figures`, `report`, `pointcloud` | figures, saving a notebook's figures and numbers, point clouds for Potree |
+
+Used in part:
+
+| module | used here | replaced here |
+|---|---|---|
+| `interpret` | the NumPy analysis functions | activations and input gradients |
+| `pretrained`, `runs` | run folders, model packaging | loading saved models |
+
+Rewritten in PyTorch: `models` (`unet`, `film`), `losses`, `pipeline` (the
+crop sampler), `callbacks` and `train`. Not ported: `subcubes`, the first
+paper's training protocol.
 
 ## Install
 
