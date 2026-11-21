@@ -68,6 +68,30 @@ required). The `.pt` file it writes needs only PyTorch. Models with layers
 not ported yet (spacing conditioning, deep supervision, strip pooling,
 dropout) are refused.
 
+## Checked against the published model
+
+The published DeepVoid model
+([doi:10.5281/zenodo.24261832](https://doi.org/10.5281/zenodo.24261832)),
+converted to PyTorch, gives the published test-slab scores
+(`notebooks/01_check_published_model.ipynb`, TNG300-3 subhalo grids from
+[doi:10.5281/zenodo.24233069](https://doi.org/10.5281/zenodo.24233069),
+L4 GPU). Four-class MCC on the test slab:
+
+| mean tracer separation ($h^{-1}$ Mpc) | 3 | 5 | 7 | 10 |
+|---|---|---|---|---|
+| published (Keras) | 0.8851 | 0.8423 | 0.7807 | 0.6834 |
+| Keras, rerun | 0.8851 | 0.8423 | 0.7807 | 0.6834 |
+| PyTorch, float32 | 0.8851 | 0.8423 | 0.7807 | 0.6834 |
+| PyTorch, float16 | 0.8851 | 0.8423 | 0.7807 | 0.6834 |
+| same class as Keras, PyTorch float16 (test slab) | 99.994% | 99.994% | 99.995% | 99.994% |
+| largest class-score difference from Keras, PyTorch float16 | 0.0039 | 0.0032 | 0.0031 | 0.0028 |
+
+The Keras model was trained with mixed precision and computes in float16,
+so the two frameworks agree to float16 rounding rather than exactly; the
+PyTorch model run in float16 is the closer comparison. In float32 it
+differs from Keras by at most 0.012 in a class score and gives the same
+class on 99.98% or more of test-slab voxels.
+
 ## Matching the Keras version
 
 PyTorch and Keras use different defaults in places, so some settings are
