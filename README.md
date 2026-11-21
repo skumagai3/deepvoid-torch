@@ -14,7 +14,8 @@ way.
 
 **This is very much a work in progress.** It cannot train or run a model
 yet. So far it has the plain U-Net (no spacing conditioning, deep
-supervision, strip pooling or dropout yet). Use
+supervision, strip pooling or dropout yet) and a converter that copies the
+weights of a trained Keras model into it. Use
 [deepvoid](https://github.com/skumagai3/deepvoid) for real work.
 
 ## What comes from `deepvoid`
@@ -56,6 +57,16 @@ paper's training protocol.
 ## Install
 
     pip install "deepvoid-torch @ git+https://github.com/skumagai3/deepvoid-torch"
+
+## Converting a Keras model
+
+    pip install "deepvoid-torch[convert] @ git+https://github.com/skumagai3/deepvoid-torch"
+    python -m deepvoid_torch.convert model.keras model.pt
+
+Reading the `.keras` file needs Keras 3 (on any backend; TensorFlow is not
+required). The `.pt` file it writes needs only PyTorch. Models with layers
+not ported yet (spacing conditioning, deep supervision, strip pooling,
+dropout) are refused.
 
 ## Matching the Keras version
 

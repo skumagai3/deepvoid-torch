@@ -16,6 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+convert = ["keras>=3"]
 test = ["pytest>=7"]
 
 [tool.setuptools.packages.find]
@@ -23,3 +24,5 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# NumPy 2 deprecation warnings raised inside Keras (used only by the converter tests)
+filterwarnings = ["ignore::DeprecationWarning:keras.*"]
