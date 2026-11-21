@@ -1,3 +1,3 @@
-from .unet import ConvBlock
+from .unet import ConvBlock, UNet3D
 
-__all__ = ["ConvBlock"]
+__all__ = ["ConvBlock", "UNet3D"]

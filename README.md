@@ -13,7 +13,8 @@ way.
 ## Status
 
 **This is very much a work in progress.** It cannot train or run a model
-yet. So far it has only the U-Net convolution block. Use
+yet. So far it has the plain U-Net (no spacing conditioning, deep
+supervision, strip pooling or dropout yet). Use
 [deepvoid](https://github.com/skumagai3/deepvoid) for real work.
 
 ## What comes from `deepvoid`
@@ -68,6 +69,7 @@ given explicitly to reproduce the Keras model:
 | batch norm momentum | 0.99, weight on the old running value | 0.1, weight on the new batch value | 1 - 0.99 = 0.01 |
 | convolution weights | Glorot (Xavier) uniform | Kaiming uniform | Glorot uniform |
 | convolution biases | zeros | uniform | zeros |
+| model output | softmax class scores | (no convention) | logits; the softmax is applied where scores are needed |
 
 Batch norm also differs in how it stores the running variance: PyTorch uses
 the unbiased batch variance (dividing by n - 1), Keras the biased one

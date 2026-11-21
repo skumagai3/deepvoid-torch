@@ -1,8 +1,9 @@
 import math
 
+import pytest
 import torch
 
-from deepvoid_torch.models import ConvBlock
+from deepvoid_torch.models import ConvBlock, UNet3D
 
 
 def test_conv_block_shape():
@@ -27,3 +28,23 @@ def test_conv_block_matches_keras_settings():
     limit = math.sqrt(6 / (27 * 2 + 27 * 16))
     assert block.conv1.weight.abs().max() <= limit
     assert ConvBlock(2, 16, batch_norm=False).conv1.bias.abs().max() == 0
+
+
+def test_unet_matches_keras_size_and_names():
+    # deepvoid.models.unet3d(depth=5, in_channels=2), the published model,
+    # has 5,646,868 trainable parameters and 5,649,812 in all
+    model = UNet3D(depth=5, in_channels=2)
+    trainable = sum(p.numel() for p in model.parameters())
+    stats = sum(b.numel() for n, b in model.named_buffers() if "num_batches" not in n)
+    assert trainable == 5_646_868
+    assert trainable + stats == 5_649_812
+    names = model.state_dict().keys()
+    assert {"enc0.conv1.weight", "bottom.bn2.running_var", "dec0_up.weight",
+            "dec3.conv2.weight", "logits.bias"} <= set(names)
+
+
+def test_unet_output_and_divisibility():
+    model = UNet3D(depth=3, in_channels=2)
+    assert model(torch.randn(1, 2, 8, 8, 8)).shape == (1, 4, 8, 8, 8)
+    with pytest.raises(ValueError):
+        model(torch.randn(1, 2, 10, 10, 10))
